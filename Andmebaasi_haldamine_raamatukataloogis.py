@@ -68,7 +68,7 @@ create_raamatud = "INSERT INTO Raamatud VALUES (2, 'Troonide mäng', '1996-08-01
 
 
 
-
+#select only one table 
 #select_Autorid = "SELECT * from Autorid"
 #autorid = execute_read_query(connection, select_Autorid)
 #for autor in autorid:
@@ -216,7 +216,7 @@ def delete_raamat_zanrID(connection,zanr_ID):
 #delete_raamat_zanrID(connection, (delete_raamat_zanr,))
 
 
-
+##all data show
 allData = """
 SELECT r.pealkiri, a.autor_nimi, z.žanri_nimi
 FROM Raamatud r
@@ -229,3 +229,13 @@ if result:
         print(row)
 else:
     print("No data found.")
+
+def delete_tabel(connection,query):
+    try:
+        cursor=connection.cursor()
+        cursor.execute(query)
+        connection.commit()
+        print("Tabel on kustatud")
+    except Error as e:
+        print("Viga ",e," tabeli kustutamisega")
+
