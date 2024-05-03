@@ -1,4 +1,5 @@
 from sqlite3 import connect, Error
+from turtle import update
 
 def create_connection(path):
     connection = None
@@ -68,7 +69,7 @@ create_raamatud = "INSERT INTO Raamatud VALUES (2, 'Troonide mäng', '1996-08-01
 
 
 
-select_Autorid = "SELECT * from Autorid"
+select_Autorid = "SELECT * from Raamatud"
 autorid = execute_read_query(connection, select_Autorid)
 for autor in autorid:
     print(autor)
@@ -122,6 +123,48 @@ def update_autor_sünnikuupäev(connection, user_data):
 #print(update_autor_Nimi)
 #update_autor_nimi(connection,update_autor_Nimi)
 
-update_autor_süünipäev=(input("Uus sünnipäev: "),input("ID: "))
-print(update_autor_süünipäev)
-update_autor_sünnikuupäev(connection,update_autor_süünipäev)
+#update_autor_süünipäev=(input("Uus sünnipäev: "),input("ID: "))
+#print(update_autor_süünipäev)
+#update_autor_sünnikuupäev(connection,update_autor_süünipäev)
+
+def update_zanr_nimi(connection,user_data):
+    query = "UPDATE Žanrid SET žanri_nimi =? WHERE žanr_id =?"
+    cursor = connection.cursor()
+    cursor.execute(query, user_data)
+    connection.commit()
+
+#update_zanr_Nimi =(input("Uus žanr nimi: "),input("ID: "))
+#print(update_zanr_Nimi)
+#update_zanr_nimi(connection,update_zanr_Nimi)
+
+def update_raamat_pealkiri(connection, user_data):
+    query = "UPDATE Raamatud SET pealkiri =? WHERE raamat_id =?"
+    cursor = connection.cursor()
+    cursor.execute(query, user_data)
+    connection.commit()
+
+def update_raamat_väljakuupäev(connection, user_data):
+    query = "UPDATE Raamatud SET väljaandmise_kuupäev =? WHERE raamat_id =?"
+    cursor = connection.cursor()
+    cursor.execute(query, user_data)
+    connection.commit()
+
+def update_raamat_autorID(connection, user_data):
+    query = "UPDATE Raamatud SET autor_id =? WHERE raamat_id =?"
+    cursor = connection.cursor()
+    cursor.execute(query, user_data)
+    connection.commit()
+
+def update_raamat_žanrID(connection, user_data):
+    query = "UPDATE Raamatud SET žanr_id =? WHERE raamat_id =?"
+    cursor = connection.cursor()
+    cursor.execute(query, user_data)
+    connection.commit()
+
+#update_raamat_Pealkiri=(input("Uus raamat pealkiri: "),input("ID: "))
+#print(update_raamat_Pealkiri)
+#update_raamat_pealkiri(connection,update_raamat_Pealkiri)
+
+update_raamat_kuupäev=(input("Uus raamat väljaandmise kuupäev : "),input("ID: "))
+print(update_raamat_kuupäev)
+update_raamat_pealkiri(connection,update_raamat_kuupäev)
