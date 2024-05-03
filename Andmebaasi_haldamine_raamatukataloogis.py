@@ -165,6 +165,14 @@ def update_raamat_žanrID(connection, user_data):
 #print(update_raamat_Pealkiri)
 #update_raamat_pealkiri(connection,update_raamat_Pealkiri)
 
-update_raamat_kuupäev=(input("Uus raamat väljaandmise kuupäev : "),input("ID: "))
-print(update_raamat_kuupäev)
-update_raamat_pealkiri(connection,update_raamat_kuupäev)
+#update_raamat_kuupäev=(input("Uus raamat väljaandmise kuupäev : "),input("ID: "))
+#print(update_raamat_kuupäev)
+#update_raamat_väljakuupäev(connection,update_raamat_kuupäev)
+
+#update_raamat_autor_ID=(input("Uus raamat autor ID : "),input("ID: "))
+#print(update_raamat_autor_ID)
+#update_raamat_autorID(connection,update_raamat_autor_ID)
+
+update_raamat_žanr_ID=(input("Uus raamat žanr ID : "),input("ID: "))
+print(update_raamat_žanr_ID)
+update_raamat_žanrID(connection,update_raamat_žanr_ID)
