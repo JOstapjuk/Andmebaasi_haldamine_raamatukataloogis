@@ -32,20 +32,20 @@ def execute_read_query(connection, query):
 
 create_autor_table = """
 CREATE TABLE IF NOT EXISTS Autorid (
-    autor_id INTEGER PRIMARY KEY,
+    autor_id INTEGER PRIMARY KEY AUTOINCREMENT,
     autor_nimi TEXT NOT NULL,
     sünnikuupäev DATE NOT NULL
 )
 """
 create_zanr_table ="""
 CREATE TABLE IF NOT EXISTS Žanrid (
-    žanr_id INTEGER PRIMARY KEY,
+    žanr_id INTEGER PRIMARY KEY AUTOINCREMENT,
     žanri_nimi TEXT NOT NULL
 )
 """
 create_raamatud_table = """
 CREATE TABLE IF NOT EXISTS Raamatud (
-    raamat_id INTEGER PRIMARY KEY,
+    raamat_id INTEGER PRIMARY KEY AUTOINCREMENT,
     pealkiri TEXT NOT NULL,
     väljaandmise_kuupäev DATE NOT NULL,
     autor_id INTEGER,
@@ -56,23 +56,23 @@ CREATE TABLE IF NOT EXISTS Raamatud (
 """
 
 connection = create_connection(r"database.db")
-#execute_query(connection, create_autor_table)
+#execute_query(connection, create_raamatud_table)
 
-create_autor = "INSERT INTO Autorid VALUES (1, 'J.K. Rowling', '1965-07-31')"
-create_autor = "INSERT INTO Autorid VALUES (2, 'George R.R. Martin', '1948-09-20')"
-create_zanr = "INSERT INTO Žanrid VALUES (1, 'Fantaasia')"
-create_zanr = "INSERT INTO Žanrid VALUES (2, 'Sci-Fi')"
-create_raamatud = "INSERT INTO Raamatud VALUES (1, 'Harry Potter ja filosoofi kivi', '1997-06-26', 1, 1)"
-create_raamatud = "INSERT INTO Raamatud VALUES (2, 'Troonide mäng', '1996-08-01', 2, 2)"
+#create_autor = "INSERT INTO Autorid(autor_nimi, sünnikuupäev) VALUES ('J.K. Rowling', '1965-07-31')"
+#create_autor = "INSERT INTO Autorid VALUES (2, 'George R.R. Martin', '1948-09-20')"
+#create_zanr = "INSERT INTO Žanrid VALUES (1, 'Fantaasia')"
+#create_zanr = "INSERT INTO Žanrid VALUES (2, 'Sci-Fi')"
+#create_raamatud = "INSERT INTO Raamatud VALUES (1, 'Harry Potter ja filosoofi kivi', '1997-06-26', 1, 1)"
+#create_raamatud = "INSERT INTO Raamatud VALUES (2, 'Troonide mäng', '1996-08-01', 2, 2)"
 #execute_query(connection, create_raamatud)
 
 
 
 #select only one table 
-#select_Autorid = "SELECT * from Autorid"
-#autorid = execute_read_query(connection, select_Autorid)
-#for autor in autorid:
-#    print(autor)
+select_Autorid = "SELECT * from Autorid"
+autorid = execute_read_query(connection, select_Autorid)
+for autor in autorid:
+    print(autor)
 
 #select_zanrid = "SELECT * from Žanrid"
 #zanrid = execute_read_query(connection, select_zanrid)
@@ -216,7 +216,7 @@ def delete_raamat_zanrID(connection,zanr_ID):
 #delete_raamat_zanrID(connection, (delete_raamat_zanr,))
 
 
-##all data show
+#all data show
 allData = """
 SELECT r.pealkiri, a.autor_nimi, z.žanri_nimi
 FROM Raamatud r
@@ -230,6 +230,9 @@ if result:
 else:
     print("No data found.")
 
+
+
+
 def delete_tabel(connection,query):
     try:
         cursor=connection.cursor()
@@ -238,4 +241,5 @@ def delete_tabel(connection,query):
         print("Tabel on kustatud")
     except Error as e:
         print("Viga ",e," tabeli kustutamisega")
+
 
