@@ -69,10 +69,20 @@ create_raamatud = "INSERT INTO Raamatud VALUES (2, 'Troonide mäng', '1996-08-01
 
 
 
-select_Autorid = "SELECT * from Raamatud"
-autorid = execute_read_query(connection, select_Autorid)
-for autor in autorid:
-    print(autor)
+#select_Autorid = "SELECT * from Autorid"
+#autorid = execute_read_query(connection, select_Autorid)
+#for autor in autorid:
+#    print(autor)
+
+#select_zanrid = "SELECT * from Žanrid"
+#zanrid = execute_read_query(connection, select_zanrid)
+#for zanr in zanrid:
+#    print(zanr)
+
+#select_raamatud = "SELECT * from Raamatud"
+#raamatud = execute_read_query(connection, select_raamatud)
+#for raamat in raamatud:
+#    print(raamat)
 
 
 
@@ -108,6 +118,9 @@ def add_raamat_query(connection,user_data):
 #add_raamat_query(connection,insert_raamat)
 
 
+
+
+
 def update_autor_nimi(connection, user_data):
     query = "UPDATE Autorid SET autor_nimi =? WHERE autor_id =?"
     cursor = connection.cursor()
@@ -127,6 +140,8 @@ def update_autor_sünnikuupäev(connection, user_data):
 #print(update_autor_süünipäev)
 #update_autor_sünnikuupäev(connection,update_autor_süünipäev)
 
+
+
 def update_zanr_nimi(connection,user_data):
     query = "UPDATE Žanrid SET žanri_nimi =? WHERE žanr_id =?"
     cursor = connection.cursor()
@@ -136,6 +151,8 @@ def update_zanr_nimi(connection,user_data):
 #update_zanr_Nimi =(input("Uus žanr nimi: "),input("ID: "))
 #print(update_zanr_Nimi)
 #update_zanr_nimi(connection,update_zanr_Nimi)
+
+
 
 def update_raamat_pealkiri(connection, user_data):
     query = "UPDATE Raamatud SET pealkiri =? WHERE raamat_id =?"
@@ -173,6 +190,42 @@ def update_raamat_žanrID(connection, user_data):
 #print(update_raamat_autor_ID)
 #update_raamat_autorID(connection,update_raamat_autor_ID)
 
-update_raamat_žanr_ID=(input("Uus raamat žanr ID : "),input("ID: "))
-print(update_raamat_žanr_ID)
-update_raamat_žanrID(connection,update_raamat_žanr_ID)
+#update_raamat_žanr_ID=(input("Uus raamat žanr ID : "),input("ID: "))
+#print(update_raamat_žanr_ID)
+#update_raamat_žanrID(connection,update_raamat_žanr_ID)
+
+
+
+
+def delete_raamat_autorID(connection,autor_ID):
+    query = "DELETE FROM Raamatud WHERE autor_id = ?"
+    cursor = connection.cursor()
+    cursor.execute(query, autor_ID)
+    connection.commit()
+
+def delete_raamat_zanrID(connection,zanr_ID):
+    query = "DELETE FROM Raamatud WHERE žanr_id = ?"
+    cursor = connection.cursor()
+    cursor.execute(query, zanr_ID)
+    connection.commit()
+
+#delete_raamat_autor = int(input("Autori nimi ID: "))
+#delete_raamat_autorID(connection, (delete_raamat_autor,))
+
+#delete_raamat_zanr = int(input("Enter the genre ID: "))
+#delete_raamat_zanrID(connection, (delete_raamat_zanr,))
+
+
+
+allData = """
+SELECT r.pealkiri, a.autor_nimi, z.žanri_nimi
+FROM Raamatud r
+INNER JOIN Autorid a ON r.autor_id = a.autor_id
+INNER JOIN Žanrid z ON r.žanr_id = z.žanr_id;
+"""
+result = execute_read_query(connection, allData)
+if result:
+    for row in result:
+        print(row)
+else:
+    print("No data found.")
