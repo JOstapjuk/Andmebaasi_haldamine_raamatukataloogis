@@ -68,7 +68,7 @@ create_raamatud = "INSERT INTO Raamatud VALUES (2, 'Troonide mäng', '1996-08-01
 
 
 
-select_Autorid = "SELECT * from Raamatud"
+select_Autorid = "SELECT * from Autorid"
 autorid = execute_read_query(connection, select_Autorid)
 for autor in autorid:
     print(autor)
@@ -76,31 +76,52 @@ for autor in autorid:
 
 
 
-
 def add_autor_query(connection,user_data):
-    query = "INSERT INTO Autorid(autor_id, autor_nimi, sünnikuupäev) VALUES ("+user_data")"
-    execute_query(connection,query)
+    query = "INSERT INTO Autorid(autor_id, autor_nimi, sünnikuupäev) VALUES (?,?,?)"
+    cursor = connection.cursor()
+    cursor.execute(query,user_data)
+    connection.commit()
 
-insert_autor = "'"+input("ID: ")+"','"+input("Nimi: ")+"','"+input("sünnikuupäev: ")+"'"
-add_autor_query(connection,insert_autor)
-#import tkinter as tk
-#from tkinter import ttk
+def add_zanr_query(connection,user_data):
+    query = "INSERT INTO Žanrid(žanr_id, žanri_nimi) VALUES (?,?)"
+    cursor = connection.cursor()
+    cursor.execute(query,user_data)
+    connection.commit()
 
-#def load_data():
-#    cursor.execute("SELECT * FROM Raamatud")
-#    data = cursor.fetchall()
-#    for item in data:
-#        tree.insert("", "end", values=item)
+def add_raamat_query(connection,user_data):
+    query = "INSERT INTO Raamatud(raamat_id,pealkiri,väljaandmise_kuupäev,autor_id,žanr_id) VALUES (?,?,?,?,?)"
+    cursor = connection.cursor()
+    cursor.execute(query,user_data)
+    connection.commit()
 
-#root = tk.Tk()
-#tree = ttk.Treeview(root, columns=("ID", "Title", "Author", "Genre"), show="headings")
-#tree.heading("ID", text="ID")
-#tree.heading("Title", text="Title")
-#tree.heading("Author", text="Author")
-#tree.heading("Genre", text="Genre")
-#tree.pack()
+#insert_autor =(input("ID: "),input("Nimi: "),input("Sünnikuupäev: "))
+#print(insert_autor)
+#add_autor_query(connection,insert_autor)
 
-#load_button = tk.Button(root, text="Load Data", command=load_data)
-#load_button.pack()
+#insert_zanr =(input("ID: "),input("Nimi: "))
+#print(insert_zanr)
+#add_zanr_query(connection,insert_zanr)
 
-#root.mainloop()
+#insert_raamat =(input("ID: "),input("Pealkiri: "),input("Väljaandmise_kuupäev: "),input("Autor_ID: "),input("Žanr_ID: "))
+#print(insert_raamat)
+#add_raamat_query(connection,insert_raamat)
+
+
+def update_autor_nimi(connection, user_data):
+    query = "UPDATE Autorid SET autor_nimi =? WHERE autor_id =?"
+    cursor = connection.cursor()
+    cursor.execute(query, user_data)
+    connection.commit()
+def update_autor_sünnikuupäev(connection, user_data):
+    query = "UPDATE Autorid SET sünnikuupäev =? WHERE autor_id =?"
+    cursor = connection.cursor()
+    cursor.execute(query, user_data)
+    connection.commit()
+
+#update_autor_Nimi=(input("Uus autor nimi: "),input("ID: "))
+#print(update_autor_Nimi)
+#update_autor_nimi(connection,update_autor_Nimi)
+
+update_autor_süünipäev=(input("Uus sünnipäev: "),input("ID: "))
+print(update_autor_süünipäev)
+update_autor_sünnikuupäev(connection,update_autor_süünipäev)
