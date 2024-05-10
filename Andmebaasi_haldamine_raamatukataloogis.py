@@ -419,6 +419,8 @@ add_raamat_btn.pack(side=tk.LEFT, padx=5)
 delete_table_btn = tk.Button(root, text="Kustuta tabel", command=kustuta_tabeli_liides)
 delete_table_btn.pack(pady=10)
 ####################### create
+create_add_frame = tk.Frame(root)
+create_add_frame.pack(pady=10)
 
 table_combobox = ttk.Combobox(root, width=30, height=10)
 table_combobox['values'] = ("Autorid", "Žanrid", "Raamatud")
