@@ -6,21 +6,21 @@ from def_raamat import *
 
 
 def update_autor_nimi2():
-    autor_id = valitud_autor_id.get()
+    autor_nimi = valitud_autor_nimi.get()
     uus_nimi = uus_nimi_entry.get()
-    update_autor_nimi(connection, (uus_nimi, autor_id))
+    update_autor_nimi(connection, (uus_nimi, autor_nimi))
     uus_nimi_entry.delete(0, END)
 
 def update_zanr_nimi2():
-    genre_id = valitud_zanr_id.get()
+    zanr_nimi = valitud_zanr_nimi.get()
     uus_nimi = uus_zanr_nimi_entry.get()
-    update_zanr_nimi(connection, (uus_nimi, genre_id))
+    update_zanr_nimi(connection, (uus_nimi, zanr_nimi))
     uus_zanr_nimi_entry.delete(0, END)
 
 def update_raamat_pealkiri2():
-    book_id = valitud_raamat_id.get()
+    raamat_pealkiri = valitud_raamat_pealkiri.get()
     uus_pealkiri = uus_pealkiri_entry.get()
-    update_raamat_pealkiri(connection, (uus_pealkiri, book_id))
+    update_raamat_pealkiri(connection, (uus_pealkiri, raamat_pealkiri))
     uus_pealkiri_entry.delete(0, END)
 
 def add_autor():
@@ -71,21 +71,32 @@ def add_raamat():
     tk.Label(raamat_andmed_frame, text="Väljaandmise kuupäev:").grid(row=2, column=0)
     väljaandmise_kuupäev_entry = tk.Entry(raamat_andmed_frame)
     väljaandmise_kuupäev_entry.grid(row=2, column=1)
-    tk.Label(raamat_andmed_frame, text="Autor ID:").grid(row=3, column=0)
-    autor_id_entry = tk.Entry(raamat_andmed_frame)
-    autor_id_entry.grid(row=3, column=1)
-    tk.Label(raamat_andmed_frame, text="Žanr ID:").grid(row=4, column=0)
-    zanr_id_entry = tk.Entry(raamat_andmed_frame)
-    zanr_id_entry.grid(row=4, column=1)
+    tk.Label(raamat_andmed_frame, text="Autor:").grid(row=3, column=0)
+    autor_andmed = execute_read_query(connection, "SELECT autor_id, autor_nimi FROM Autorid")
+    autor_ids = [row[0] for row in autor_andmed]
+    autor_names = [row[1] for row in autor_andmed]
+    valitud_autor_id = tk.StringVar()
+    autor_id_combobox = ttk.Combobox(raamat_andmed_frame, textvariable=valitud_autor_id, values=autor_ids)
+    autor_id_combobox['values'] = autor_names 
+    autor_id_combobox.grid(row=3, column=1)
+    tk.Label(raamat_andmed_frame, text="Žanr:").grid(row=4, column=0)
+    zanr_amded = execute_read_query(connection, "SELECT žanr_id, žanri_nimi FROM Žanrid")
+    zanr_ids = [row[0] for row in zanr_amded]
+    zanr_names = [row[1] for row in zanr_amded]
+    valitud_zanr_id = tk.StringVar()
+    zanr_id_combobox = ttk.Combobox(raamat_andmed_frame, textvariable=valitud_zanr_id, values=zanr_ids)
+    zanr_id_combobox['values'] = zanr_names
+    zanr_id_combobox.grid(row=4, column=1)
     
-    def add_book_to_database():
+    def add_raamat_andmebaasi():
         raamat_andmed = (pealkiri_entry.get(), väljaandmise_kuupäev_entry.get(), 
-                     autor_id_entry.get(), zanr_id_entry.get())
+                         valitud_autor_id.get(), valitud_zanr_id.get())
         add_raamat_query(connection, raamat_andmed)
         raamat_andmed_frame.destroy()
     
-    add_btn = tk.Button(raamat_andmed_frame, text="Lisa raamat", command=add_book_to_database)
+    add_btn = tk.Button(raamat_andmed_frame, text="Lisa raamat", command=add_raamat_andmebaasi)
     add_btn.grid(row=5, column=0, columnspan=2)
+
 
 def delete_raamat_pealkirja_järgi():
     uus_window = tk.Toplevel(root)
@@ -144,28 +155,10 @@ def delete_autor_nime_järgi():
     kinnitusnupp = tk.Button(uus_window, text="Kinnita kustutamine", command=kinnitada_kustutamist)
     kinnitusnupp.pack(pady=10)
 
-def näita_all_andmeid():
-    allData = """
-    SELECT r.pealkiri, a.autor_nimi, z.žanri_nimi
-    FROM Raamatud r
-    INNER JOIN Autorid a ON r.autor_id = a.autor_id
-    INNER JOIN Žanrid z ON r.žanr_id = z.žanr_id;
-    """
-    result = execute_read_query(connection, allData)
-    if result:
-        andmed_window = tk.Toplevel(root)
-        andmed_window.title("Kõik andmed")
-        
-        text_widget = tk.Text(andmed_window, width=40, height=10)
-        text_widget.pack()
-        
-        for row in result:
-            text_widget.insert(tk.END, f"{row}\n")
-    else:
-        print("Andmeid ei leitud")
+
 
 def table_autorid(conn):
-    window_autorid = tk.Tk() 
+    window_autorid = tk.Toplevel() 
     window_autorid.title("Autorite tabel") 
     tree = ttk.Treeview(window_autorid, column=("autor_id", "autor_nimi", "sünnikuupäev"), show="headings")
     tree.column("autor_id", anchor=CENTER)
@@ -187,7 +180,7 @@ def näita_autorid_tabelit():
     table_autorid(connection)
     
 def table_zanr(conn):
-    window_zanr = tk.Tk() 
+    window_zanr = tk.Toplevel() 
     window_zanr.title("Žanrite tabel") 
     tree = ttk.Treeview(window_zanr, column=("žanr_id", "žanri_nimi"), show="headings")
     tree.column("žanr_id", anchor=CENTER)
@@ -208,42 +201,124 @@ def näita_zanri_tabelit():
 
 
 def table_raamatud(conn): 
-    window_raamatud = tk.Tk() 
+    window_raamatud = tk.Toplevel() 
     window_raamatud.title("Raamatute tabel") 
-    tree = ttk.Treeview(window_raamatud, column=("raamat_id", "pealkiri", "väljaandmise_kuupäev", "autor_id", "zanr_id"), show="headings")
+    tree = ttk.Treeview(window_raamatud, column=("raamat_id", "pealkiri", "väljaandmise_kuupäev", "autor_nimi", "žanri_nimi"), show="headings")
     tree.column("raamat_id", anchor=CENTER)
     tree.heading("raamat_id", text="raamat_id")
     tree.column("pealkiri", anchor=CENTER)
     tree.heading("pealkiri", text="pealkiri") 
     tree.column("väljaandmise_kuupäev", anchor=CENTER)
     tree.heading("väljaandmise_kuupäev", text="väljaandmise_kuupäev") 
-    tree.column("autor_id", anchor=CENTER)
-    tree.heading("autor_id", text="autor_id") 
-    tree.column("zanr_id", anchor=CENTER)
-    tree.heading("zanr_id", text="zanr_id") 
+    tree.column("autor_nimi", anchor=CENTER)
+    tree.heading("autor_nimi", text="autor_nimi") 
+    tree.column("žanri_nimi", anchor=CENTER)
+    tree.heading("žanri_nimi", text="žanri_nimi")
     try:
-        read = execute_read_query(conn, "SELECT * FROM Raamatud ")
+        read = execute_read_query(conn, "SELECT r.raamat_id, r.pealkiri, r.väljaandmise_kuupäev, a.autor_nimi, z.žanri_nimi FROM Raamatud r INNER JOIN Autorid a ON r.autor_id = a.autor_id INNER JOIN Žanrid z ON r.žanr_id = z.žanr_id;")
         for row in read:
             tree.insert("", END, values=row)    
     except Exception as e:
         print(f"Viga raamatu tabelis: {e}") 
     tree.pack()
     window_raamatud.mainloop()
+
     
 def näita_raamatud_tabelit():
     table_raamatud(connection)
 
 
+def delete_table_clicked():
+    tabel_nimi = tabel_nimi_entry.get()
+    query = f"DROP TABLE IF EXISTS {tabel_nimi}"
+    delete_tabel(connection, query)
+    window.destroy()
+
+def kustuta_tabeli_liides():
+    global window
+    window = tk.Toplevel(root)
+    window.title("Kustuta Tabel")
+
+    tabel_nimi_label = tk.Label(window, text="Tabeli nimi:")
+    tabel_nimi_label.pack(pady=10)
+
+    global tabel_nimi_entry
+    tabel_nimi_entry = tk.Entry(window)
+    tabel_nimi_entry.pack(pady=5)
+
+    delete_button = tk.Button(window, text="Kustuta", command=delete_table_clicked)
+    delete_button.pack(pady=5)
+
+
+from tkinter import messagebox
+
+def create_valitud_tabel():
+    cursor = connection.cursor()
+    valitud_tabel = table_combobox.get()
+    if valitud_tabel == "Autorid":
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS Autorid (
+                autor_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                autor_nimi TEXT NOT NULL,
+                sünnikuupäev DATE NOT NULL
+            )
+        """)
+    elif valitud_tabel == "Žanrid":
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS Žanrid (
+                žanr_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                žanri_nimi TEXT NOT NULL
+            )
+        """)
+    elif valitud_tabel == "Raamatud":
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS Raamatud (
+                raamat_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                pealkiri TEXT NOT NULL,
+                väljaandmise_kuupäev DATE NOT NULL,
+                autor_id INTEGER,
+                žanr_id INTEGER,
+                FOREIGN KEY(autor_id) REFERENCES Autorid(autor_id),
+                FOREIGN KEY(žanr_id) REFERENCES Žanrid(žanr_id)
+            )
+        """)
+    else:
+        print("Vigane valik.")
+    
+    connection.commit()
+    messagebox.showinfo("Edu", f"Tabel '{valitud_tabel}' on edukalt loodud")
+
+def insert_initial_data():
+    valitud_tabel = algsed_andmed_combobox.get()
+    alg_andmed_päringud = {
+        "Autorid": [
+            "INSERT INTO Autorid(autor_nimi, sünnikuupäev) VALUES ('J.K. Rowling', '1965-07-31')",
+            "INSERT INTO Autorid VALUES (2, 'George R.R. Martin', '1948-09-20')"
+        ],
+        "Žanrid": [
+            "INSERT INTO Žanrid VALUES (1, 'Fantaasia')",
+            "INSERT INTO Žanrid VALUES (2, 'Sci-Fi')"
+        ],
+        "Raamatud": [
+            "INSERT INTO Raamatud VALUES (1, 'Harry Potter ja filosoofi kivi', '1997-06-26', 1, 1)",
+            "INSERT INTO Raamatud VALUES (2, 'Troonide mäng', '1996-08-01', 2, 2)"
+        ]
+    }
+    if valitud_tabel in alg_andmed_päringud:
+        for query in alg_andmed_päringud[valitud_tabel]:
+            execute_query(connection, query)
+        messagebox.showinfo("Edu", f"Esialgsed andmed sisestati {valitud_tabel} tabelisse edukalt")
+    else:
+        messagebox.showerror("Viga", "Kehtetu tabeli nimi")
 
 root = tk.Tk()
 root.title("Raamatukataloog")
 
+######################### show
 
 näidata_andme_frame = tk.Frame(root)
 näidata_andme_frame.pack(pady=10)
 
-näidata_andme_btn = tk.Button(näidata_andme_frame, text="Näita kõiki andmeid", command=näita_all_andmeid)
-näidata_andme_btn.pack(side=tk.LEFT, padx=5)
 
 näidata_autori_btn = tk.Button(näidata_andme_frame, text="Näita Autorite tabelit", command=näita_autorid_tabelit)
 näidata_autori_btn.pack(side=tk.LEFT, padx=5)
@@ -253,7 +328,7 @@ zanr_table_btn.pack(side=tk.LEFT, padx=5)
 
 raamatud_table_btn = tk.Button(näidata_andme_frame, text="Näita raamatute tabelit", command=näita_raamatud_tabelit)
 raamatud_table_btn.pack(side=tk.LEFT, padx=5)
-
+############################################ delete
 
 delete_frame = tk.Frame(root)
 delete_frame.pack(pady=10)
@@ -266,21 +341,21 @@ delete_zanr_button.pack(side=tk.LEFT, padx=5)
 
 delete_pealkiri_button = tk.Button(delete_frame, text="Kustuta Raamat pealkirja järgi", command=delete_raamat_pealkirja_järgi)
 delete_pealkiri_button.pack(side=tk.LEFT, padx=5)
-
+################################### update
 
 update_frame = tk.Frame(root)
 update_frame.pack(pady=10)
 
-autor_ids = [row[0] for row in execute_read_query(connection, "SELECT autor_id FROM Autorid")]
+autor_nimi = [row[0] for row in execute_read_query(connection, "SELECT autor_nimi FROM Autorid")]
 näidata_andme_frame = tk.Frame(root)
 näidata_andme_frame.pack(pady=10)
 
-autor_id_label = tk.Label(näidata_andme_frame, text="Valige Autori ID:")
-autor_id_label.pack(side=tk.LEFT, padx=5)
+autor_nimi_label = tk.Label(näidata_andme_frame, text="Valige Autori nimi:")
+autor_nimi_label.pack(side=tk.LEFT, padx=5)
 
-valitud_autor_id = tk.StringVar()
-autor_id_combobox = ttk.Combobox(näidata_andme_frame, textvariable=valitud_autor_id, values=autor_ids)
-autor_id_combobox.pack(side=tk.LEFT, padx=5)
+valitud_autor_nimi = tk.StringVar()
+autor_nimi_combobox = ttk.Combobox(näidata_andme_frame, textvariable=valitud_autor_nimi, values=autor_nimi)
+autor_nimi_combobox.pack(side=tk.LEFT, padx=5)
 
 uus_nimi_label = tk.Label(näidata_andme_frame, text="Uus nimi:")
 uus_nimi_label.pack(side=tk.LEFT, padx=5)
@@ -290,16 +365,16 @@ uus_nimi_entry.pack(side=tk.LEFT, padx=5)
 update_autor_button = tk.Button(näidata_andme_frame, text="Uuenda autorinime", command=update_autor_nimi2)
 update_autor_button.pack(side=tk.LEFT, padx=5)
 
-zanr_ids = [row[0] for row in execute_read_query(connection, "SELECT žanr_id FROM Žanrid")]
+zanr_nimi = [row[0] for row in execute_read_query(connection, "SELECT žanri_nimi FROM Žanrid")]
 update_zanr_frame = tk.Frame(root)
 update_zanr_frame.pack(pady=10)
 
-zanr_id_label = tk.Label(update_zanr_frame, text="Valige žanri ID:")
-zanr_id_label.pack(side=tk.LEFT, padx=5)
+zanr_nimi_label = tk.Label(update_zanr_frame, text="Valige žanri nimi:")
+zanr_nimi_label.pack(side=tk.LEFT, padx=5)
 
-valitud_zanr_id = tk.StringVar()
-zanr_id_combobox = ttk.Combobox(update_zanr_frame, textvariable=valitud_zanr_id, values=zanr_ids)
-zanr_id_combobox.pack(side=tk.LEFT, padx=5)
+valitud_zanr_nimi = tk.StringVar()
+zanr_nimi_combobox = ttk.Combobox(update_zanr_frame, textvariable=valitud_zanr_nimi, values=zanr_nimi)
+zanr_nimi_combobox.pack(side=tk.LEFT, padx=5)
 
 uus_zanr_nimi_label = tk.Label(update_zanr_frame, text="Uue žanri nimi:")
 uus_zanr_nimi_label.pack(side=tk.LEFT, padx=5)
@@ -309,16 +384,16 @@ uus_zanr_nimi_entry.pack(side=tk.LEFT, padx=5)
 update_zanr_button = tk.Button(update_zanr_frame, text="Uuenda žanri nime", command=update_zanr_nimi2)
 update_zanr_button.pack(side=tk.LEFT, padx=5)
 
-raamat_ids = [row[0] for row in execute_read_query(connection, "SELECT raamat_id FROM Raamatud")]
+raamat_pealkiris = [row[0] for row in execute_read_query(connection, "SELECT pealkiri FROM Raamatud")]
 update_raamat_frame = tk.Frame(root)
 update_raamat_frame.pack(pady=10)
 
-raamat_id_label = tk.Label(update_raamat_frame, text="Vali raamatu ID:")
-raamat_id_label.pack(side=tk.LEFT, padx=5)
+raamat_pealkiri_label = tk.Label(update_raamat_frame, text="Vali raamatu ID:")
+raamat_pealkiri_label.pack(side=tk.LEFT, padx=5)
 
-valitud_raamat_id = tk.StringVar()
-raamat_id_combobox = ttk.Combobox(update_raamat_frame, textvariable=valitud_raamat_id, values=raamat_ids)
-raamat_id_combobox.pack(side=tk.LEFT, padx=5)
+valitud_raamat_pealkiri = tk.StringVar()
+raamat_pealkiri_combobox = ttk.Combobox(update_raamat_frame, textvariable=valitud_raamat_pealkiri, values=raamat_pealkiris)
+raamat_pealkiri_combobox.pack(side=tk.LEFT, padx=5)
 
 uus_pealkiri_label = tk.Label(update_raamat_frame, text="Uus pealkiri:")
 uus_pealkiri_label.pack(side=tk.LEFT, padx=5)
@@ -327,6 +402,7 @@ uus_pealkiri_entry.pack(side=tk.LEFT, padx=5)
 
 update_raamat_button = tk.Button(update_raamat_frame, text="Uuenda raamatu pealkirja", command=update_raamat_pealkiri2)
 update_raamat_button.pack(side=tk.LEFT, padx=5)
+########################## add
 
 add_frame = tk.Frame(root)
 add_frame.pack(pady=10)
@@ -339,6 +415,27 @@ add_zanr_btn.pack(side=tk.LEFT, padx=5)
 
 add_raamat_btn = tk.Button(add_frame, text="Lisa raamat", command=add_raamat)
 add_raamat_btn.pack(side=tk.LEFT, padx=5)
+
+delete_table_btn = tk.Button(root, text="Kustuta tabel", command=kustuta_tabeli_liides)
+delete_table_btn.pack(pady=10)
+####################### create
+
+table_combobox = ttk.Combobox(root, width=30, height=10)
+table_combobox['values'] = ("Autorid", "Žanrid", "Raamatud")
+table_combobox.pack(side=tk.LEFT, padx=(10, 5)) 
+
+create_button = tk.Button(root, text="Tabeli loomine", command=create_valitud_tabel)
+create_button.pack(side=tk.LEFT, pady=10, padx=(5, 10))
+
+############################ add andmed tabelis
+
+algsed_andmed_combobox = ttk.Combobox(root, width=30, height=10)
+algsed_andmed_combobox['values'] = ("Autorid", "Žanrid", "Raamatud")
+algsed_andmed_combobox.pack(side=tk.LEFT, padx=(10, 5))
+
+insert_initial_data_button = tk.Button(root, text="Lisage algandmed", command=insert_initial_data)
+insert_initial_data_button.pack(side=tk.LEFT, padx=(5, 10))
+
 
 
 root.mainloop()

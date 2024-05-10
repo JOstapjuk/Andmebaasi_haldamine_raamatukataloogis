@@ -1,5 +1,6 @@
 from sqlite3 import connect, Error
-
+from tkinter import messagebox
+import tkinter as tk
 
 def create_connection(path):
     connection = None
@@ -66,23 +67,26 @@ connection = create_connection(r"database.db")
 # execute_query(connection, create_raamatud)
 
 
-def add_autor_query(connection,user_data):
+def add_autor_query(connection, user_data):
     query = "INSERT INTO Autorid(autor_nimi, sünnikuupäev) VALUES (?,?)"
     cursor = connection.cursor()
-    cursor.execute(query,user_data)
+    cursor.execute(query, user_data)
     connection.commit()
+    messagebox.showinfo("Edu","Autor lisas edukalt")
 
-def add_zanr_query(connection,genre1):
+def add_zanr_query(connection, genre1):
     query = "INSERT INTO Žanrid(žanri_nimi) VALUES (?)"
     cursor = connection.cursor()
-    cursor.execute(query,genre1)
+    cursor.execute(query, genre1)
     connection.commit()
+    messagebox.showinfo("Edu", "Žanr lisatud edukalt")
 
-def add_raamat_query(connection,user_data):
+def add_raamat_query(connection, user_data):
     query = "INSERT INTO Raamatud(pealkiri,väljaandmise_kuupäev,autor_id,žanr_id) VALUES (?,?,?,?)"
     cursor = connection.cursor()
-    cursor.execute(query,user_data)
+    cursor.execute(query, user_data)
     connection.commit()
+    messagebox.showinfo("Edu", "Raamat lisatud edukalt")
 
 ##insert_autor =(input("ID: "),input("Nimi: "),input("Sünnikuupäev: "))
 ##print(insert_autor)
@@ -101,10 +105,11 @@ def add_raamat_query(connection,user_data):
 
 
 def update_autor_nimi(connection, user_data):
-    query = "UPDATE Autorid SET autor_nimi =? WHERE autor_id =?"
+    query = "UPDATE Autorid SET autor_nimi = ? WHERE autor_nimi = ?"
     cursor = connection.cursor()
     cursor.execute(query, user_data)
     connection.commit()
+    messagebox.showinfo("Edu", "Autori nimi uuendatud edukalt")
 
 
 ##update_autor_Nimi=(input("Uus autor nimi: "),input("ID: "))
@@ -114,11 +119,12 @@ def update_autor_nimi(connection, user_data):
 
 
 
-def update_zanr_nimi(connection,user_data):
-    query = "UPDATE Žanrid SET žanri_nimi =? WHERE žanr_id =?"
+def update_zanr_nimi(connection, user_data):
+    query = "UPDATE Žanrid SET žanri_nimi = ? WHERE žanri_nimi = ?"
     cursor = connection.cursor()
     cursor.execute(query, user_data)
     connection.commit()
+    messagebox.showinfo("Edu", "Genre nimi uuendatud edukalt")
 
 ##update_zanr_Nimi =(input("Uus žanr nimi: "),input("ID: "))
 ##print(update_zanr_Nimi)
@@ -127,11 +133,11 @@ def update_zanr_nimi(connection,user_data):
 
 
 def update_raamat_pealkiri(connection, user_data):
-    query = "UPDATE Raamatud SET pealkiri =? WHERE raamat_id =?"
+    query = "UPDATE Raamatud SET pealkiri = ? WHERE pealkiri = ?"
     cursor = connection.cursor()
     cursor.execute(query, user_data)
     connection.commit()
-
+    messagebox.showinfo("Edu", "Raamatu pealkiri uuendatud edukalt")
 
 ##update_raamat_Pealkiri=(input("Uus raamat pealkiri: "),input("ID: "))
 ##print(update_raamat_Pealkiri)
@@ -144,18 +150,21 @@ def delete_raamat_pealkiri(connection, pealkiri):
     cursor = connection.cursor()
     cursor.execute(query, (pealkiri,))
     connection.commit()
+    messagebox.showinfo("Edu", "Raamat edukalt kustutatud")
 
 def delete_genre_by_name_query(connection, genre_name):
     query = "DELETE FROM Žanrid WHERE žanri_nimi = ?"
     cursor = connection.cursor()
     cursor.execute(query, (genre_name,))
     connection.commit()
+    messagebox.showinfo("Edu", "Žanr kustutatud edukalt")
 
 def delete_autor_by_name(connection, autor_nimi):
     query = "DELETE FROM Autorid WHERE autor_nimi =?"
     cursor = connection.cursor()
     cursor.execute(query, (autor_nimi,))
     connection.commit()
+    messagebox.showinfo("Edu", "Autor kustutatud edukalt")
 
 ##delete_raamat_autor = int(input("Autori nimi ID: "))
 ##delete_raamat_autorID(connection, (delete_raamat_autor,))
@@ -179,11 +188,15 @@ else:
     print("No data found.")
     
 
-def delete_tabel(connection,query):
+def delete_tabel(connection, query):
     try:
-        cursor=connection.cursor()
+        cursor = connection.cursor()
         cursor.execute(query)
         connection.commit()
         print("Tabel on kustatud")
+        messagebox.showinfo("Success", "Tabel on kustatud")
     except Error as e:
-        print("Viga ",e," tabeli kustutamisega")
+        print("Viga ", e, " tabeli kustutamisega")
+        messagebox.showerror("Error", f"Viga {e} tabeli kustutamisega")
+
+
