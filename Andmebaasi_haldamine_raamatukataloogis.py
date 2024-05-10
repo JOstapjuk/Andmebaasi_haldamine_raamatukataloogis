@@ -293,15 +293,15 @@ def insert_initial_data():
     alg_andmed_päringud = {
         "Autorid": [
             "INSERT INTO Autorid(autor_nimi, sünnikuupäev) VALUES ('J.K. Rowling', '1965-07-31')",
-            "INSERT INTO Autorid VALUES (2, 'George R.R. Martin', '1948-09-20')"
+            "INSERT INTO Autorid VALUES ('George R.R. Martin', '1948-09-20')"
         ],
         "Žanrid": [
-            "INSERT INTO Žanrid VALUES (1, 'Fantaasia')",
-            "INSERT INTO Žanrid VALUES (2, 'Sci-Fi')"
+            "INSERT INTO Žanrid VALUES ('Fantaasia')",
+            "INSERT INTO Žanrid VALUES ('Sci-Fi')"
         ],
         "Raamatud": [
-            "INSERT INTO Raamatud VALUES (1, 'Harry Potter ja filosoofi kivi', '1997-06-26', 1, 1)",
-            "INSERT INTO Raamatud VALUES (2, 'Troonide mäng', '1996-08-01', 2, 2)"
+            "INSERT INTO Raamatud VALUES ('Harry Potter ja filosoofi kivi', '1997-06-26', 1, 1)",
+            "INSERT INTO Raamatud VALUES ('Troonide mäng', '1996-08-01', 2, 2)"
         ]
     }
     if valitud_tabel in alg_andmed_päringud:
@@ -388,7 +388,7 @@ raamat_pealkiris = [row[0] for row in execute_read_query(connection, "SELECT pea
 update_raamat_frame = tk.Frame(root)
 update_raamat_frame.pack(pady=10)
 
-raamat_pealkiri_label = tk.Label(update_raamat_frame, text="Vali raamatu ID:")
+raamat_pealkiri_label = tk.Label(update_raamat_frame, text="Vali raamatu pealkiri:")
 raamat_pealkiri_label.pack(side=tk.LEFT, padx=5)
 
 valitud_raamat_pealkiri = tk.StringVar()
