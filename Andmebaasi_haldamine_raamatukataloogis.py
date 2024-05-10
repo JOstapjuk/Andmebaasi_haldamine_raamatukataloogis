@@ -102,14 +102,14 @@ def delete_raamat_pealkirja_järgi():
         pealkiri = pealkiri_entry.get()
         delete_raamat_pealkiri(connection, pealkiri)
         uus_window.destroy()  
-    kinnitusnupp = tk.Button(uus_window, text="Confirm Deletion", command=kinnitada_kustutamist)
+    kinnitusnupp = tk.Button(uus_window, text="Kinnita kustutamine", command=kinnitada_kustutamist)
     kinnitusnupp.pack(pady=10)
     
 def delete_žanri_nime_järgi():
     uus_window = tk.Toplevel(root)
-    uus_window.title("Delete Genre by Name")
+    uus_window.title("Žanri kustutamine nime järgi")
 
-    juhendamise = tk.Label(uus_window, text="Enter the Genre Name to delete:")
+    juhendamise = tk.Label(uus_window, text="Sisesta kustutamiseks žanrinimi:")
     juhendamise.pack(pady=10)
 
     global zanr_nimi_entry
@@ -121,15 +121,15 @@ def delete_žanri_nime_järgi():
         delete_genre_by_name_query(connection, zanr_nimi)
         uus_window.destroy()
 
-    kinnitusnupp = tk.Button(uus_window, text="Confirm Deletion", command=kinnitada_kustutamist)
+    kinnitusnupp = tk.Button(uus_window, text="Kinnita kustutamine", command=kinnitada_kustutamist)
     kinnitusnupp.pack(pady=10)
     
 
 def delete_autor_nime_järgi():
     uus_window = tk.Toplevel(root)
-    uus_window.title("Delete Author by Name")
+    uus_window.title("Autori kustutamine nime järgi")
 
-    juhendamise = tk.Label(uus_window, text="Enter the Author Name to delete:")
+    juhendamise = tk.Label(uus_window, text="Sisestage kustutamiseks autori nimi:")
     juhendamise.pack(pady=10)
 
     global autor_nimi_entry 
@@ -141,7 +141,7 @@ def delete_autor_nime_järgi():
         delete_autor_by_name(connection, autor_nimi)
         uus_window.destroy()
 
-    kinnitusnupp = tk.Button(uus_window, text="Confirm Deletion", command=kinnitada_kustutamist)
+    kinnitusnupp = tk.Button(uus_window, text="Kinnita kustutamine", command=kinnitada_kustutamist)
     kinnitusnupp.pack(pady=10)
 
 def näita_all_andmeid():
