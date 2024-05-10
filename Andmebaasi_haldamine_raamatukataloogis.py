@@ -330,16 +330,16 @@ raamatud_table_btn = tk.Button(näidata_andme_frame, text="Näita raamatute tabe
 raamatud_table_btn.pack(side=tk.LEFT, padx=5)
 ############################################ delete
 
-delete_frame = tk.Frame(root)
-delete_frame.pack(pady=10)
+add_andmed_frame = tk.Frame(root)
+add_andmed_frame.pack(pady=10)
 
-delete_autor_button = tk.Button(delete_frame, text="Autori kustutamine nime järgi", command=delete_autor_nime_järgi)
+delete_autor_button = tk.Button(add_andmed_frame, text="Autori kustutamine nime järgi", command=delete_autor_nime_järgi)
 delete_autor_button.pack(side=tk.LEFT, padx=5)
 
-delete_zanr_button = tk.Button(delete_frame, text="Žanri kustutamine nime järgi", command=delete_žanri_nime_järgi)
+delete_zanr_button = tk.Button(add_andmed_frame, text="Žanri kustutamine nime järgi", command=delete_žanri_nime_järgi)
 delete_zanr_button.pack(side=tk.LEFT, padx=5)
 
-delete_pealkiri_button = tk.Button(delete_frame, text="Kustuta Raamat pealkirja järgi", command=delete_raamat_pealkirja_järgi)
+delete_pealkiri_button = tk.Button(add_andmed_frame, text="Kustuta Raamat pealkirja järgi", command=delete_raamat_pealkirja_järgi)
 delete_pealkiri_button.pack(side=tk.LEFT, padx=5)
 ################################### update
 
